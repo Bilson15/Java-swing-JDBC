@@ -5,6 +5,7 @@
  */
 package View;
 
+import Dao.ConexaoBanco;
 import Dao.DaoItemPedido;
 import Dao.DaoPedido;
 import Dao.DaoProduto;
@@ -23,22 +24,11 @@ public class CrudJava {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       /*
-        Cliente cli = new Cliente(13, "Gabriel", "13132", "123123");
-        Produto pro = new Produto(15, "Teclado", 150.00);
+        //System.err.println(ConexaoBanco.ConexaoBanco());
         
-        ItemPedido ip = new ItemPedido(pro, 15, 1, 10);
+        String cpf = "70600140121";
         
-        DaoItemPedido daoI = new DaoItemPedido();
-        
-        System.out.println(daoI.gravarEmBanco(ip));
-        */
-       
-       DaoProduto dao = new DaoProduto();
-       System.out.println(dao.buscarPorUm("Teclado"));
-       
-       DaoPedido daao = new DaoPedido();
-       System.out.println(daao.buscarPorUm(706));
+        System.out.println(Long.parseLong(cpf));
         
     }
     

@@ -32,7 +32,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
                 + "VALUES(?, ?, ?, ?)";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
-            stm.setInt(1, cliente.getCpf());
+            stm.setLong(1, cliente.getCpf());
             stm.setString(2, cliente.getNome());
             stm.setString(3, cliente.getDataNascimento());
             stm.setString(4, cliente.getContato());
@@ -48,7 +48,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
         String sql = "DELETE FROM CLIENTES WHERE CLI_CPF = ?";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
-            stm.setInt(1, cliente.getCpf());
+            stm.setLong(1, cliente.getCpf());
             return stm.executeUpdate();
         } catch(SQLException e){
             e.getStackTrace();
@@ -65,7 +65,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
             stm.setString(1, cliente.getNome());
             stm.setString(2, cliente.getDataNascimento());
             stm.setString(3, cliente.getContato());
-            stm.setInt(4, cliente.getCpf());
+            stm.setLong(4, cliente.getCpf());
             return stm.executeUpdate();
         } catch(SQLException e){
             e.getStackTrace();
@@ -83,7 +83,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
 
                 while(result.next()) {
                         Cliente cli = new Cliente();
-                        cli.setCpf(result.getInt("CLI_CPF"));
+                        cli.setCpf(result.getLong("CLI_CPF"));
                         cli.setNome(result.getString("CLI_NOME"));
                         cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                         cli.setContato(result.getString("CLI_CONTATO"));
@@ -105,7 +105,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
 
             while(result.next()) {
                 Cliente cli = new Cliente();
-                cli.setCpf(result.getInt("CLI_CPF"));
+                cli.setCpf(result.getLong("CLI_CPF"));
                 cli.setNome(result.getString("CLI_NOME"));
                 cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                 cli.setContato(result.getString("CLI_CONTATO"));

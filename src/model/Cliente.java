@@ -10,12 +10,12 @@ package model;
  * @author gabri
  */
 public class Cliente {
-    private int cpf;
+    private Long cpf;
     private String nome;
     private String dataNascimento;
     private String contato;
 
-    public Cliente(int cpf, String nome, String dataNascimento, String contato) {
+    public Cliente(Long cpf, String nome, String dataNascimento, String contato) {
         this.cpf = cpf;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -26,11 +26,11 @@ public class Cliente {
         
     }
 
-    public int getCpf() {
+    public Long getCpf() {
         return cpf;
     }
 
-    public void setCpf(int cpf) {
+    public void setCpf(Long cpf) {
         this.cpf = cpf;
     }
 

@@ -35,7 +35,7 @@ public class DaoPedido implements DaoGeneric<Pedido>{
             PreparedStatement stm = con.prepareStatement(sql);
             stm.setInt(1, pedido.getCodigo());
             stm.setString(2, pedido.getData());
-            stm.setInt(3, pedido.getCliente().getCpf());
+            stm.setLong(3, pedido.getCliente().getCpf());
             return stm.executeUpdate();
         } catch(SQLException e){
             e.getStackTrace();
@@ -73,7 +73,7 @@ public class DaoPedido implements DaoGeneric<Pedido>{
                         Cliente cli = new Cliente();
                         ped.setCodigo(result.getInt("PED_NUM"));
                         ped.setData(result.getString("PED_DATA"));
-                        cli.setCpf(result.getInt("CLI_CPF"));
+                        cli.setCpf(result.getLong("CLI_CPF"));
                         cli.setNome(result.getString("CLI_NOME"));
                         cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                         cli.setContato(result.getString("CLI_CONTATO"));
@@ -99,7 +99,7 @@ public class DaoPedido implements DaoGeneric<Pedido>{
                     Pedido ped = new Pedido();
                     ped.setCodigo(result.getInt("PED_NUM"));
                     ped.setData(result.getString("PED_DATA"));
-                    cli.setCpf(result.getInt("CLI_CPF"));
+                    cli.setCpf(result.getLong("CLI_CPF"));
                     cli.setNome(result.getString("CLI_NOME"));
                     cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                     cli.setContato(result.getString("CLI_CONTATO"));
