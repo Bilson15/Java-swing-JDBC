@@ -20,14 +20,15 @@ import java.sql.Statement;
  *
  * @author Usuario
  */
-public class DaoPedido {
+public class DaoPedido implements DaoGeneric<Pedido>{
    private Connection con;
     
     public DaoPedido(){
         this.con = ConexaoBanco.ConexaoBanco();
     }
     
-    public int gravarPedido(Pedido pedido){
+   @Override
+    public int gravar(Pedido pedido){
         String sql = "INSERT INTO PEDIDO (PED_NUM, PED_DATA, PED_CLI_CPF) "
                 + "VALUES(?,?,?)";
         try{
@@ -42,7 +43,8 @@ public class DaoPedido {
         }
     }
     
-    public int excluirPedido(Pedido pedido){
+   @Override
+    public int excluir(Pedido pedido){
         String sql = "DELETE FROM PEDIDO WHERE PED_NUM = ?";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
@@ -53,8 +55,9 @@ public class DaoPedido {
             return 0;
         }
     }
-    
-    public List<Pedido> pegarTudo(){
+ 
+   @Override
+    public List<Pedido> buscarTodos(){
         String sql = "SELECT PED_NUM, PED_DATA, CLIENTES.* " +
                      "FROM CLIENTES INNER JOIN PEDIDO ON CLI_CPF = PED_CLI_CPF";
         
@@ -79,20 +82,21 @@ public class DaoPedido {
                 }
                 return pedidos;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
-    public Pedido pesquisarPorNome(int cliCPF){
+   @Override
+    public List<Pedido> buscarPorUm(int cliCPF){
         String sql = "SELECT PED_NUM, PED_DATA, CLIENTES.* " +
                      "FROM CLIENTES INNER JOIN PEDIDO ON CLI_CPF = PED_CLI_CPF WHERE PED_CLI_CPF LIKE '%"+cliCPF+"%'";
-        Pedido ped = new Pedido();
+        List<Pedido> pedidos = new ArrayList<>();
         try {
             Statement stm = con.createStatement();
             ResultSet result = stm.executeQuery(sql);
 
             while(result.next()) {
                     Cliente cli = new Cliente();
+                    Pedido ped = new Pedido();
                     ped.setCodigo(result.getInt("PED_NUM"));
                     ped.setData(result.getString("PED_DATA"));
                     cli.setCpf(result.getInt("CLI_CPF"));
@@ -100,12 +104,23 @@ public class DaoPedido {
                     cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                     cli.setContato(result.getString("CLI_CONTATO"));
                     ped.setCliente(cli);
+                    pedidos.add(ped);
             }
-            return ped;
+            return pedidos;
         } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
         }
+    }
+    
+    @Override
+    public List<Pedido> buscarPorUm(String nome){
+        return null;
+    }
+    
+    @Override
+    public int alterar(Pedido pedido){
+        return 0;
     }
     
 }

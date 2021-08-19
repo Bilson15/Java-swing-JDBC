@@ -19,14 +19,15 @@ import model.Produto;
  *
  * @author Usuario
  */
-public class DaoCliente {
-    private Connection con;
+public class DaoCliente implements DaoGeneric<Cliente> {
+    private final Connection con;
     
     public DaoCliente(){
         this.con = ConexaoBanco.ConexaoBanco();
     }
     
-    public int gravarEmBanco(Cliente cliente){
+    @Override
+    public int gravar(Cliente  cliente){
         String sql = "INSERT INTO CLIENTES (CLI_CPF, CLI_NOME, CLI_DATA_NASCIMENTO, CLI_CONTATO) "
                 + "VALUES(?, ?, ?, ?)";
         try{
@@ -41,8 +42,9 @@ public class DaoCliente {
             return 0;
         }
     }
-    
-    public int excluirCliente(Cliente cliente){
+
+    @Override
+    public int excluir(Cliente cliente){
         String sql = "DELETE FROM CLIENTES WHERE CLI_CPF = ?";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
@@ -53,8 +55,9 @@ public class DaoCliente {
             return 0;
         }
     }
-    
-    public int alterarCliente(Cliente cliente){
+
+    @Override
+    public int alterar(Cliente cliente){
     String sql = "UPDATE CLIENTES SET CLI_NOME = ?, CLI_DATA_NASCIMENTO = ?, CLI_CONTATO = ? WHERE CLI_CPF = ?";
                   
         try{
@@ -69,7 +72,8 @@ public class DaoCliente {
             return 0;
         }
     }
-    public List<Cliente> pegarTudo(){
+    @Override
+    public List<Cliente> buscarTodos(){
         String sql = "SELECT * FROM CLIENTES";
         List<Cliente> clientes = new ArrayList<>();
 
@@ -88,29 +92,35 @@ public class DaoCliente {
 
                 return clientes;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
-    public Cliente pesquisarPorNome(String clienteNome){
+    @Override
+    public List<Cliente> buscarPorUm(String clienteNome){
         String sql = "SELECT * FROM CLIENTES WHERE CLI_NOME LIKE '%"+clienteNome+"%'";
-        Cliente cli = new Cliente();
+        List<Cliente> clientes = new ArrayList<>();
         try {
             Statement stm = con.createStatement();
             ResultSet result = stm.executeQuery(sql);
 
             while(result.next()) {
+                Cliente cli = new Cliente();
                 cli.setCpf(result.getInt("CLI_CPF"));
                 cli.setNome(result.getString("CLI_NOME"));
                 cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
                 cli.setContato(result.getString("CLI_CONTATO"));
+                clientes.add(cli);
             }
 
-            return cli;
+            return clientes;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
+    }
+    
+    @Override
+    public List<Cliente> buscarPorUm(int id){
+        return null;
     }
     
 }

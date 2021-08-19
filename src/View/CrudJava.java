@@ -34,8 +34,11 @@ public class CrudJava {
         System.out.println(daoI.gravarEmBanco(ip));
         */
        
-       DaoPedido dao = new DaoPedido();
-       System.out.println(dao.pesquisarPorNome(706));
+       DaoProduto dao = new DaoProduto();
+       System.out.println(dao.buscarPorUm("Teclado"));
+       
+       DaoPedido daao = new DaoPedido();
+       System.out.println(daao.buscarPorUm(706));
         
     }
     

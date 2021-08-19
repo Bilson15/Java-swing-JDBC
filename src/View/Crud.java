@@ -24,9 +24,9 @@ public class Crud extends javax.swing.JFrame {
     List<Pedido> pedidos;
     List<ItemPedido> itemDePedido;
     List<ItemPedido> itemPedidoCarrinho;
-    Produto pro;
-    Cliente cli;
-    Pedido ped;
+    List<Produto> pro;
+    List<Cliente> cli;
+    List<Pedido> ped;
     
     DaoCliente daoCliente;
     DaoProduto daoProduto;
@@ -37,7 +37,7 @@ public class Crud extends javax.swing.JFrame {
    
             
             public void criarTabela(){
-                clientes = daoCliente.pegarTudo();
+                clientes = daoCliente.buscarTodos();
                 DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[4];
@@ -53,17 +53,17 @@ public class Crud extends javax.swing.JFrame {
                 DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[4];
-    
-                dadosLinha[0] = String.valueOf(cli.getCpf());
-                dadosLinha[1] = cli.getNome();
-                dadosLinha[2] = String.valueOf(cli.getDataNascimento());
-                dadosLinha[3] = String.valueOf(cli.getContato());
-                model.addRow(dadosLinha);
-                
+                for(int i = 0; i < cli.size(); i++){
+                    dadosLinha[0] = String.valueOf(cli.get(i).getCpf());
+                    dadosLinha[1] = cli.get(i).getNome();
+                    dadosLinha[2] = String.valueOf(cli.get(i).getDataNascimento());
+                    dadosLinha[3] = String.valueOf(cli.get(i).getContato());
+                    model.addRow(dadosLinha);
+                }
             }
             
             public void criarTabelaProduto(){
-                produtos = daoProduto.pegarTudo();
+                produtos = daoProduto.buscarTodos();
                 DefaultTableModel model = (DefaultTableModel) tableProdutos.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[3];
@@ -78,16 +78,16 @@ public class Crud extends javax.swing.JFrame {
                 DefaultTableModel model = (DefaultTableModel) tableProdutos.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[3];
-
-                dadosLinha[0] = String.valueOf(pro.getCodigo());
-                dadosLinha[1] = pro.getNome();
-                dadosLinha[2] = String.valueOf(pro.getPreco());
-                model.addRow(dadosLinha);
-                
+                for(int i = 0; i < pro.size(); i++){
+                    dadosLinha[0] = String.valueOf(pro.get(i).getCodigo());
+                    dadosLinha[1] = pro.get(i).getNome();
+                    dadosLinha[2] = String.valueOf(pro.get(i).getPreco());
+                    model.addRow(dadosLinha);
+                }
             }
             
             public void criarTabelaPedidos(){
-                pedidos = daoPedido.pegarTudo();
+                pedidos = daoPedido.buscarTodos();
                 DefaultTableModel model = (DefaultTableModel) tabelaPedidos.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[4];
@@ -103,13 +103,13 @@ public class Crud extends javax.swing.JFrame {
                 DefaultTableModel model = (DefaultTableModel) tabelaPedidos.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[4];
- 
-                dadosLinha[0] = String.valueOf(ped.getCodigo());
-                dadosLinha[1] = ped.getData();
-                dadosLinha[2] = String.valueOf(ped.getCliente().getCpf());
-                dadosLinha[3] = ped.getCliente().getNome();
-                model.addRow(dadosLinha);
-                
+                for(int i = 0; i < ped.size(); i++){
+                    dadosLinha[0] = String.valueOf(ped.get(i).getCodigo());
+                    dadosLinha[1] = ped.get(i).getData();
+                    dadosLinha[2] = String.valueOf(ped.get(i).getCliente().getCpf());
+                    dadosLinha[3] = ped.get(i).getCliente().getNome();
+                    model.addRow(dadosLinha);
+                }
             }            
 
             public void criarTabelaPedidoProdutos(){
@@ -128,7 +128,7 @@ public class Crud extends javax.swing.JFrame {
             }
             
             public void criarTabelaCarrinho(){
-                itemPedidoCarrinho = daoItemPedido.pegarTudo();
+                itemPedidoCarrinho = daoItemPedido.buscarTodos();
                 DefaultTableModel model = (DefaultTableModel) tabelaCarrinho.getModel();
                 model.setRowCount(0);
                 String dadosLinha[] = new String[6];
@@ -156,14 +156,14 @@ public class Crud extends javax.swing.JFrame {
         pedidos = new ArrayList<>();
         itemDePedido = new ArrayList<>();
         itemPedidoCarrinho = new ArrayList<>();
-        pro = new Produto();
-        cli = new Cliente();
-        ped = new Pedido();
+        pro = new ArrayList<>();
+        cli = new ArrayList<>();
+        ped = new ArrayList<>();
 
-        clientes = daoCliente.pegarTudo();
-        produtos = daoProduto.pegarTudo();
-        pedidos = daoPedido.pegarTudo();
-        itemPedidoCarrinho = daoItemPedido.pegarTudo();
+        clientes = daoCliente.buscarTodos();
+        produtos = daoProduto.buscarTodos();
+        pedidos = daoPedido.buscarTodos();
+        itemPedidoCarrinho = daoItemPedido.buscarTodos();
 
     } 
 
@@ -1010,7 +1010,7 @@ public class Crud extends javax.swing.JFrame {
         String contato = txtContato.getText();
         
         Cliente cliente = new Cliente(cpf, nome, dataNascimento, contato);
-        int resultado = daoCliente.gravarEmBanco(cliente);
+        int resultado = daoCliente.gravar(cliente);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Cadastrado com sucesso!");
@@ -1034,7 +1034,7 @@ public class Crud extends javax.swing.JFrame {
         
         Cliente cliente = new Cliente(cpf, nome, dataNascimento, contato);
         
-        int resultado = daoCliente.excluirCliente(cliente);
+        int resultado = daoCliente.excluir(cliente);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Removido com sucesso!");
@@ -1054,7 +1054,7 @@ public class Crud extends javax.swing.JFrame {
         String nome = txtNomeProduto.getText();
         double preco = Double.parseDouble(txtPrecoProduto.getText());
         Produto pro = new Produto(codigo, nome, preco);
-        int resultado = daoProduto.gravarProduto(pro);
+        int resultado = daoProduto.gravar(pro);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Cadastrado com sucesso!");
@@ -1075,7 +1075,7 @@ public class Crud extends javax.swing.JFrame {
         double preco = Double.parseDouble(txtPrecoProduto.getText());
         
         Produto pro = new Produto(codigo, nome, preco);
-        int resultado = daoProduto.excluirProduto(pro);
+        int resultado = daoProduto.excluir(pro);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Removido com sucesso!");
@@ -1101,10 +1101,11 @@ public class Crud extends javax.swing.JFrame {
         for(int i = 0; i < clientes.size(); i++){
             if(codigoCliente == clientes.get(i).getCpf()){
                 Pedido ped = new Pedido(codigoPedido, clientes.get(i), data);
-                int resultado = daoPedido.gravarPedido(ped);
+                int resultado = daoPedido.gravar(ped);
                 
                 if(resultado == 1){
                     JOptionPane.showMessageDialog(this, "Cadastrado com sucesso!");
+                    i = clientes.size();
                     break;
                 }else {
                     JOptionPane.showMessageDialog(this, "Ops! algo deu errado");
@@ -1129,10 +1130,11 @@ public class Crud extends javax.swing.JFrame {
         for(int i = 0; i < clientes.size(); i++){
             if(codigoCliente == clientes.get(i).getCpf()){
                 Pedido ped = new Pedido(codigoPedido, clientes.get(i), data);
-                int resultado = daoPedido.excluirPedido(ped);
+                int resultado = daoPedido.excluir(ped);
                 
                 if(resultado == 1){
                     JOptionPane.showMessageDialog(this, "Removido com sucesso!");
+                    i = clientes.size();
                     break;
                 }else {
                     JOptionPane.showMessageDialog(this, "Ops! algo deu errado");
@@ -1165,10 +1167,13 @@ public class Crud extends javax.swing.JFrame {
                for(int x = 0; x < produtos.size(); x++){
                    if(codigoProduto == produtos.get(x).getCodigo()){
                        ItemPedido itemPedido = new ItemPedido(produtos.get(x), quantidade, numeroPedidoCarrinho, desconto); 
-                       int resultado = daoItemPedido.gravarEmBanco(itemPedido);
+                       int resultado = daoItemPedido.gravar(itemPedido);
                         
                        if(resultado == 1){
                             JOptionPane.showMessageDialog(this, "Cadastrado com sucesso!");
+                            x = produtos.size();
+                            i = pedidos.size();
+                            break;
                         }else {
                             JOptionPane.showMessageDialog(this, "Ops! algo deu errado");
                         }
@@ -1189,7 +1194,7 @@ public class Crud extends javax.swing.JFrame {
         
         Produto pro = new Produto(codigo, nome, preco);
         
-        int resultado = daoProduto.alterarProduto(pro);
+        int resultado = daoProduto.alterar(pro);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Alterado com sucesso!");
@@ -1211,7 +1216,7 @@ public class Crud extends javax.swing.JFrame {
         
         Cliente cli = new Cliente(cpf, nome, dataNascimento, contato);
         
-        int resultado = daoCliente.alterarCliente(cli);
+        int resultado = daoCliente.alterar(cli);
         
         if(resultado == 1){
             JOptionPane.showMessageDialog(this, "Alterado com sucesso!");
@@ -1291,9 +1296,11 @@ public class Crud extends javax.swing.JFrame {
                for(int x = 0; x < produtos.size(); x++){
                    if(codigoProduto == produtos.get(x).getCodigo()){
                        ItemPedido itemPedido = new ItemPedido(produtos.get(x), quantidade, numeroPedidoCarrinho, desconto); 
-                       int resultado = daoItemPedido.excluirItemPedido(itemPedido);
+                       int resultado = daoItemPedido.excluir(itemPedido);
                         if(resultado == 1){
                             JOptionPane.showMessageDialog(this, "removido com sucesso com sucesso!");
+                            x = produtos.size();
+                            i = pedidos.size();
                             break;
                         }else {
                             JOptionPane.showMessageDialog(this, "Ops! algo deu errado");
@@ -1309,19 +1316,20 @@ public class Crud extends javax.swing.JFrame {
 
     private void pesquisarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisarProdutoActionPerformed
         String nome = (txtPesquisar.getText());
-        pro = daoProduto.pesquisarPorNome(nome);
+        pro = daoProduto.buscarPorUm(nome);
+        JOptionPane.showMessageDialog(this, pro);
         criarTabelaProdutoPesquisado();
     }//GEN-LAST:event_pesquisarProdutoActionPerformed
 
     private void pesquisarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisarClienteActionPerformed
         String nome = (txtNomeCliente.getText());
-        cli = daoCliente.pesquisarPorNome(nome);
+        cli = daoCliente.buscarPorUm(nome);
         criarTabelaPesquisado();
     }//GEN-LAST:event_pesquisarClienteActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         int cpf = Integer.parseInt(txtCPFpesquisa.getText());
-        ped = daoPedido.pesquisarPorNome(cpf);
+        ped = daoPedido.buscarPorUm(cpf);
         criarTabelaPedidosPesquisado();
     }//GEN-LAST:event_jButton5ActionPerformed
 

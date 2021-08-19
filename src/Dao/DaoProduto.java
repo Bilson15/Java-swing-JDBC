@@ -12,20 +12,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import model.Cliente;
 import model.Produto;
 
 /**
  *
  * @author Usuario
  */
-public class DaoProduto {
+public class DaoProduto implements DaoGeneric<Produto>{
    private Connection con;
     
     public DaoProduto(){
         this.con = ConexaoBanco.ConexaoBanco();
     }
     
-    public int gravarProduto(Produto produto){
+   @Override
+    public int gravar(Produto produto){
         String sql = "INSERT INTO PRODUTO (PRO_ID, PRO_NOME, PRO_PRECO) "
                 + "VALUES(?, ?, ?)";
         try{
@@ -40,7 +42,8 @@ public class DaoProduto {
         }
     }
     
-    public int excluirProduto(Produto produto){
+   @Override
+    public int excluir(Produto produto){
         String sql = "DELETE FROM PRODUTO WHERE PRO_ID = ?";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
@@ -52,7 +55,8 @@ public class DaoProduto {
         }
     }
     
-    public int alterarProduto(Produto produto){
+   @Override
+    public int alterar(Produto produto){
         String sqlP = "UPDATE PRODUTO SET PRO_NOME = ?, PRO_PRECO = ? WHERE PRO_ID = ?";
                   
         try{
@@ -66,7 +70,8 @@ public class DaoProduto {
             return 0;
         }
     }
-    public List<Produto> pegarTudo(){
+   @Override
+    public List<Produto> buscarTodos(){
         String sql = "SELECT * FROM PRODUTO";
         List<Produto> produtos = new ArrayList<>();
 
@@ -84,30 +89,35 @@ public class DaoProduto {
 
                 return produtos;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
     
-    public Produto pesquisarPorNome(String produtoNome){
+   @Override
+    public List<Produto> buscarPorUm(String produtoNome){
         String sql = "SELECT * FROM PRODUTO WHERE PRO_NOME LIKE '%"+produtoNome+"%'";
-        Produto pro = new Produto();
+        List<Produto> produtos = new ArrayList<>();
         try {
             Statement stm = con.createStatement();
             ResultSet result = stm.executeQuery(sql);
 
             while(result.next()) {
+                Produto pro = new Produto();
                 pro.setCodigo(result.getInt("PRO_ID"));
                 pro.setNome(result.getString("PRO_NOME"));
                 pro.setPreco(result.getDouble("PRO_PRECO"));
+                produtos.add(pro);
             }
 
-            return pro;
+            return produtos;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
     
+    @Override
+    public List<Produto> buscarPorUm(int id){
+        return null;
+    }
     
 }

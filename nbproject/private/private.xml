@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/CrudJava/src/services/Servicos.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/Dao/DaoPedido.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/View/CrudJava.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/Dao/DaoProduto.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/Dao/DaoItemPedido.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/View/Crud.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/Dao/DaoCliente.java</file>
+            <file>file:/C:/Users/gabri/OneDrive/Área%20de%20Trabalho/02semestreADS2021/Senai/CrudJava/src/Dao/DaoGeneric.java</file>
         </group>
     </open-files>
 </project-private>

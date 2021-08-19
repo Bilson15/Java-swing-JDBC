@@ -19,14 +19,15 @@ import model.Produto;
  *
  * @author Usuario
  */
-public class DaoItemPedido {
+public class DaoItemPedido implements DaoGeneric<ItemPedido>{
         private Connection con;
     
     public DaoItemPedido(){
         this.con = ConexaoBanco.ConexaoBanco();
     }
     
-    public int gravarEmBanco(ItemPedido itemPedido){
+    @Override
+    public int gravar(ItemPedido itemPedido){
         String sql = "INSERT INTO ITEM_PEDIDO VALUES(?, ?, ?, ?)";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
@@ -41,7 +42,8 @@ public class DaoItemPedido {
         }
     }
     
-    public List<ItemPedido> pegarTudo(){
+    @Override
+    public List<ItemPedido> buscarTodos(){
         String sql = "SELECT ITEM_PED_QUANTIDADE, ITEM_PED_PED_NUM, PRODUTO.*, ITEM_PED_PORC_DESCO "
                 + "FROM PEDIDO INNER JOIN ITEM_PEDIDO ON PED_NUM = ITEM_PED_PED_NUM "
                 + "INNER JOIN PRODUTO ON PRO_ID = ITEM_PED_PROD_COD ORDER BY ITEM_PED_PED_NUM";
@@ -65,7 +67,6 @@ public class DaoItemPedido {
                 }
                 return itemPedidos;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
@@ -96,12 +97,12 @@ public class DaoItemPedido {
                 }
                 return itemPedidos;
         } catch (SQLException e) {
-                e.printStackTrace();
                 return null;
         }
     }
     
-    public int excluirItemPedido(ItemPedido itemPedido){
+    @Override
+    public int excluir(ItemPedido itemPedido){
         String sql = "DELETE FROM ITEM_PEDIDO WHERE ITEM_PED_PED_NUM = ?";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
@@ -113,44 +114,19 @@ public class DaoItemPedido {
         }
     }
     
-    /*
-    public int alterarCliente(ItemPedido itemPedido){
-    String sql = "UPDATE CLIENTES SET CLI_NOME = ?, CLI_DATA_NASCIMENTO = ?, CLI_CONTATO = ? WHERE CLI_CPF = ?";
-                  
-        try{
-            PreparedStatement stm = con.prepareStatement(sql);
-            stm.setString(1, cliente.getNome());
-            stm.setString(2, cliente.getDataNascimento());
-            stm.setString(3, cliente.getContato());
-            stm.setInt(4, cliente.getCpf());
-            return stm.executeUpdate();
-        } catch(SQLException e){
-            e.getStackTrace();
-            return 0;
-        }
+    @Override
+    public List<ItemPedido> buscarPorUm(String nome){
+        return null;
     }
-    public List<Cliente> pegarTudo(){
-        String sql = "SELECT * FROM CLIENTES";
-        List<Cliente> clientes = new ArrayList<>();
-
-        try {
-                PreparedStatement stm = con.prepareStatement(sql);
-                ResultSet result = stm.executeQuery();
-
-                while(result.next()) {
-                        Cliente cli = new Cliente();
-                        cli.setCpf(result.getInt("CLI_CPF"));
-                        cli.setNome(result.getString("CLI_NOME"));
-                        cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
-                        cli.setContato(result.getString("CLI_CONTATO"));
-                        clientes.add(cli);
-                }
-
-                return clientes;
-        } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
-        }
+    
+    @Override
+    public List<ItemPedido> buscarPorUm(int id){
+        return null;
     }
-*/
+    
+    @Override
+    public int alterar(ItemPedido itemPedido){
+        return 0;
+    }
+
 }
