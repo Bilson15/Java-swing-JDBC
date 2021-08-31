@@ -15,22 +15,46 @@ public class Pedido {
     
    private int codigo; 
    private Cliente cliente;
-   private String data;
+   private Date data;
+   private Vendedor vendedor;
+   private double comissao;
    
-    public Pedido(int codigo, Cliente cliente, String data) {
+    public Pedido(Cliente cliente) {
+        this.codigo = 0;
+        this.cliente = cliente;
+        this.data = null;
+    }
+    
+    public Pedido(int codigo,Cliente cliente) {
         this.codigo = codigo;
         this.cliente = cliente;
-        this.data = data;
+        this.data = null;
+    }
+
+    public double getComissao() {
+        return comissao;
+    }
+
+    public void setComissao(double comissao) {
+        this.comissao = comissao;
     }
     
     public Pedido(){
     }
 
-    public String getData() {
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+    
+    public Date getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
     
@@ -51,12 +75,14 @@ public class Pedido {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
- 
+
     @Override
     public String toString() {
-        return "Pedido{" + "codigo=" + codigo + ", cliente=" + cliente + '}'+ "\n";
+        return "Pedido{" + "codigo=" + codigo + ", cliente=" + cliente + ", data=" + data + ", vendedor=" + vendedor + ", comissao=" + comissao + '}';
     }
+    
+ 
+
     
     
     

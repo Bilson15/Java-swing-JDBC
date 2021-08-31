@@ -6,6 +6,7 @@
 package Dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,8 @@ import java.util.List;
 import model.Cliente;
 import model.Pedido;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import model.Vendedor;
 
 
 /**
@@ -21,7 +24,8 @@ import java.sql.Statement;
  * @author Usuario
  */
 public class DaoPedido implements DaoGeneric<Pedido>{
-   private Connection con;
+    private Connection con;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
     public DaoPedido(){
         this.con = ConexaoBanco.ConexaoBanco();
@@ -29,13 +33,11 @@ public class DaoPedido implements DaoGeneric<Pedido>{
     
    @Override
     public int gravar(Pedido pedido){
-        String sql = "INSERT INTO PEDIDO (PED_NUM, PED_DATA, PED_CLI_CPF) "
-                + "VALUES(?,?,?)";
+        String sql = "INSERT INTO PEDIDO (PED_CLI_CPF) "
+                + "VALUES(?)";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
-            stm.setInt(1, pedido.getCodigo());
-            stm.setString(2, pedido.getData());
-            stm.setLong(3, pedido.getCliente().getCpf());
+            stm.setLong(1, pedido.getCliente().getCpf());
             return stm.executeUpdate();
         } catch(SQLException e){
             e.getStackTrace();
@@ -72,10 +74,10 @@ public class DaoPedido implements DaoGeneric<Pedido>{
                         Pedido ped = new Pedido();
                         Cliente cli = new Cliente();
                         ped.setCodigo(result.getInt("PED_NUM"));
-                        ped.setData(result.getString("PED_DATA"));
+                        ped.setData(result.getDate("PED_DATA"));
                         cli.setCpf(result.getLong("CLI_CPF"));
                         cli.setNome(result.getString("CLI_NOME"));
-                        cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
+                        cli.setDataNascimento(result.getDate("CLI_DATA_NASCIMENTO"));
                         cli.setContato(result.getString("CLI_CONTATO"));
                         ped.setCliente(cli);
                         pedidos.add(ped);
@@ -98,10 +100,10 @@ public class DaoPedido implements DaoGeneric<Pedido>{
                     Cliente cli = new Cliente();
                     Pedido ped = new Pedido();
                     ped.setCodigo(result.getInt("PED_NUM"));
-                    ped.setData(result.getString("PED_DATA"));
+                    ped.setData(result.getDate("PED_DATA"));
                     cli.setCpf(result.getLong("CLI_CPF"));
                     cli.setNome(result.getString("CLI_NOME"));
-                    cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
+                    cli.setDataNascimento(result.getDate("CLI_DATA_NASCIMENTO"));
                     cli.setContato(result.getString("CLI_CONTATO"));
                     ped.setCliente(cli);
                     pedidos.add(ped);
@@ -123,4 +125,68 @@ public class DaoPedido implements DaoGeneric<Pedido>{
         return 0;
     }
     
+    
+    
+    
+    public List<Pedido> buscarTodosVendedorComissao(){
+        String sql = "SELECT DISTINCT PED_NUM, PED_DATA, CLIENTES.*, PED_VEN_MAT, PED_COMISSAO "
+                + "FROM CLIENTES INNER JOIN PEDIDO ON CLI_CPF = PED_CLI_CPF "
+                + "INNER JOIN VENDEDOR ON PED_VEN_MAT = VEN_MAT OR PED_VEN_MAT IS NULL";
+        
+        
+        List<Pedido> pedidos = new ArrayList<>();
+
+        try {
+                PreparedStatement stm = con.prepareStatement(sql);
+                ResultSet result = stm.executeQuery();
+
+                while(result.next()) {
+                        Pedido ped = new Pedido();
+                        Cliente cli = new Cliente();
+                        Vendedor ven = new Vendedor();
+                        ped.setCodigo(result.getInt("PED_NUM"));
+                        ped.setData(result.getDate("PED_DATA"));
+                        cli.setCpf(result.getLong("CLI_CPF"));
+                        cli.setNome(result.getString("CLI_NOME"));
+                        cli.setDataNascimento(result.getDate("CLI_DATA_NASCIMENTO"));
+                        cli.setContato(result.getString("CLI_CONTATO"));
+                        ven.setMatricula(result.getInt("PED_VEN_MAT"));
+                        ped.setVendedor(ven);
+                        
+                        if(ped.getVendedor().getMatricula() == 0){
+                            Vendedor venn = new Vendedor("Sem Vendedor", "--");
+                            ped.setVendedor(venn);
+                        }else{
+                            DaoVendedor dao = new DaoVendedor();
+                            Vendedor vendedor = dao.buscarPorUmMat(ped.getVendedor().getMatricula());
+                            ped.getVendedor().setNome(vendedor.getNome());
+                            ped.getVendedor().setContato(vendedor.getContato());
+                        }
+
+                        ped.setComissao(result.getDouble("PED_COMISSAO"));
+                                              
+                        ped.setCliente(cli);
+                        pedidos.add(ped);
+                }
+                return pedidos;
+        } catch (SQLException e) {
+                return null;
+        }
+        
+    }
+
+    public int gravarComVendedor(Pedido pedido){
+        String sql = "INSERT INTO PEDIDO (PED_CLI_CPF, PED_VEN_MAT) "
+                + "VALUES(?, ?)";
+        try{
+            PreparedStatement stm = con.prepareStatement(sql);
+            stm.setLong(1, pedido.getCliente().getCpf());
+            stm.setInt(2, pedido.getVendedor().getMatricula());
+            return stm.executeUpdate();
+        } catch(SQLException e){
+            e.getStackTrace();
+            return 0;
+        }
+    }
 }
+ 

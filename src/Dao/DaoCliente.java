@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import model.Produto;
 
 /**
@@ -21,6 +22,7 @@ import model.Produto;
  */
 public class DaoCliente implements DaoGeneric<Cliente> {
     private final Connection con;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
     public DaoCliente(){
         this.con = ConexaoBanco.ConexaoBanco();
@@ -34,7 +36,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
             PreparedStatement stm = con.prepareStatement(sql);
             stm.setLong(1, cliente.getCpf());
             stm.setString(2, cliente.getNome());
-            stm.setString(3, cliente.getDataNascimento());
+            stm.setString(3, simpleDateFormat.format(cliente.getDataNascimento()));
             stm.setString(4, cliente.getContato());
             return stm.executeUpdate();
         } catch(SQLException e){
@@ -63,7 +65,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
         try{
             PreparedStatement stm = con.prepareStatement(sql);
             stm.setString(1, cliente.getNome());
-            stm.setString(2, cliente.getDataNascimento());
+            stm.setString(2, simpleDateFormat.format(cliente.getDataNascimento()));
             stm.setString(3, cliente.getContato());
             stm.setLong(4, cliente.getCpf());
             return stm.executeUpdate();
@@ -85,7 +87,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
                         Cliente cli = new Cliente();
                         cli.setCpf(result.getLong("CLI_CPF"));
                         cli.setNome(result.getString("CLI_NOME"));
-                        cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
+                        cli.setDataNascimento(result.getDate("CLI_DATA_NASCIMENTO"));
                         cli.setContato(result.getString("CLI_CONTATO"));
                         clientes.add(cli);
                 }
@@ -107,7 +109,7 @@ public class DaoCliente implements DaoGeneric<Cliente> {
                 Cliente cli = new Cliente();
                 cli.setCpf(result.getLong("CLI_CPF"));
                 cli.setNome(result.getString("CLI_NOME"));
-                cli.setDataNascimento(result.getString("CLI_DATA_NASCIMENTO"));
+                cli.setDataNascimento(result.getDate("CLI_DATA_NASCIMENTO"));
                 cli.setContato(result.getString("CLI_CONTATO"));
                 clientes.add(cli);
             }

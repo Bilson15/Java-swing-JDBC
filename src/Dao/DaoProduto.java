@@ -28,13 +28,12 @@ public class DaoProduto implements DaoGeneric<Produto>{
     
    @Override
     public int gravar(Produto produto){
-        String sql = "INSERT INTO PRODUTO (PRO_ID, PRO_NOME, PRO_PRECO) "
-                + "VALUES(?, ?, ?)";
+        String sql = "INSERT INTO PRODUTO (PRO_NOME, PRO_PRECO) "
+                + "VALUES(?, ?)";
         try{
             PreparedStatement stm = con.prepareStatement(sql);
-            stm.setInt(1, produto.getCodigo());
-            stm.setString(2, produto.getNome());
-            stm.setDouble(3, produto.getPreco());
+            stm.setString(1, produto.getNome());
+            stm.setDouble(2, produto.getPreco());
             return stm.executeUpdate();
         } catch(SQLException e){
             e.getStackTrace();
